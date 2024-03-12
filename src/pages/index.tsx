@@ -17,6 +17,7 @@ export default function Home() {
         <Image className="logo" src={logoImg} width={232} height={58} alt="" />
       </S.ImageContainer>
       <S.ContentContainer>
+        <Image className="logo" src={logoImg} width={232} height={58} alt="" />
         <Text as="h2">Boas vindas!</Text>
         <Text>Faça seu login ou acesse como visitante.</Text>
 

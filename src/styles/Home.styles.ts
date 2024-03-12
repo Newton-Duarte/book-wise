@@ -1,12 +1,14 @@
 import { styled } from '.'
 
 export const Container = styled('div', {
+  maxWidth: '90rem',
   height: '100%',
   display: 'grid',
   gridTemplateColumns: '598px 1fr',
   padding: '$5',
+  margin: '0 auto',
 
-  '@media (max-width: 600px)': {
+  '@media (max-width: 1023px)': {
     gridTemplateColumns: '1fr',
   },
 })
@@ -15,6 +17,7 @@ export const ImageContainer = styled('div', {
   position: 'relative',
 
   '> img': {
+    objectFit: 'cover',
     borderRadius: '$md',
     '&.logo': {
       position: 'absolute',
@@ -24,7 +27,7 @@ export const ImageContainer = styled('div', {
     },
   },
 
-  '@media (max-width: 600px)': {
+  '@media (max-width: 1023px)': {
     display: 'none',
   },
 })
@@ -37,6 +40,14 @@ export const ContentContainer = styled('div', {
   maxWidth: '372px',
   width: '100%',
   margin: '0 auto',
+
+  '> img.logo': {
+    margin: '0 auto 2rem',
+
+    '@media (min-width: 1023px)': {
+      display: 'none',
+    },
+  },
 
   h2: {
     marginBottom: '$1',
