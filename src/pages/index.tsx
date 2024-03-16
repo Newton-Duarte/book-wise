@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { RocketLaunch } from 'phosphor-react'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/Button'
@@ -6,10 +7,13 @@ import logoImg from '@/assets/images/logo.png'
 import authBgImg from '@/assets/images/auth-bg.png'
 import googleLogoImg from '@/assets/images/google-logo.png'
 import githubLogoImg from '@/assets/images/github-logo.png'
+import { HOME_ROUTE } from '@/constants/app-routes'
 
-import * as S from '@/styles/Home.styles'
+import * as S from '@/styles/Login.styles'
 
 export default function Home() {
+  const router = useRouter()
+
   return (
     <S.Container>
       <S.ImageContainer>
@@ -35,7 +39,7 @@ export default function Home() {
             </Button>
           </li>
           <li>
-            <Button>
+            <Button onClick={() => router.push(HOME_ROUTE)}>
               <RocketLaunch color="#8381D9" />
               Acessar como visitante
             </Button>
