@@ -1,5 +1,11 @@
 import { Text } from '../Text'
 
+import * as S from './styles'
+
 export function Sidebar() {
-  return <Text>Sidebar</Text>
+  return (
+    <S.Container>
+      <Text>Sidebar</Text>
+    </S.Container>
+  )
 }
