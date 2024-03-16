@@ -66,10 +66,18 @@ export const ContentContainer = styled('div', {
         display: 'flex',
         alignItems: 'center',
         gap: '0.5rem',
+        background: '$gray600',
+        height: '4.5rem',
+        justifyContent: 'left',
+        padding: '$5 $6',
 
         svg: {
           width: '2rem',
           height: '2rem',
+        },
+
+        '&:hover': {
+          background: '$gray500 !important',
         },
       },
     },

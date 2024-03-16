@@ -21,10 +21,3 @@ export const Header = styled('div', {
 export const Content = styled('div', {
   marginTop: '2.5rem',
 })
-
-export const BooksList = styled('ul', {
-  marginTop: '1rem',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '0.75rem',
-})
