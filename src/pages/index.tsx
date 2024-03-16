@@ -9,7 +9,7 @@ import googleLogoImg from '@/assets/images/google-logo.png'
 import githubLogoImg from '@/assets/images/github-logo.png'
 import { HOME_ROUTE } from '@/constants/app-routes'
 
-import * as S from '@/styles/Login.styles'
+import * as S from '@/styles/pages/Login.styles'
 
 export default function Home() {
   const router = useRouter()
