@@ -5,5 +5,4 @@ export type Book = {
   description: string
   imageURL: string
   rating: number
-  date: string
 }

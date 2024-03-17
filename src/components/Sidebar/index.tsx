@@ -5,13 +5,11 @@ import { Text } from '../Text'
 
 import * as S from './styles'
 import Link from 'next/link'
-import { Binoculars, ChartLineUp, SignIn } from 'phosphor-react'
+import { Binoculars, ChartLineUp, SignIn, User } from 'phosphor-react'
 import { useRouter } from 'next/router'
 
 export function Sidebar() {
   const router = useRouter()
-
-  console.log(router.pathname)
 
   return (
     <S.Container>
@@ -22,17 +20,25 @@ export function Sidebar() {
           className={router.pathname === '/home' ? 'active' : ''}
         >
           <ChartLineUp size={24} />
-          <Text>Início</Text>
+          Início
         </Link>
         <Link
           href="/explore"
           className={router.pathname === '/explore' ? 'active' : ''}
         >
           <Binoculars size={24} />
-          <Text>Explorar</Text>
+          Explorar
         </Link>
+        <Link
+          href="/profile"
+          className={router.pathname === '/profile' ? 'active' : ''}
+        >
+          <User size={24} />
+          Perfil
+        </Link>
+
         <Link href="/">
-          <Text>Fazer login</Text>
+          Fazer login
           <SignIn size={20} />
         </Link>
       </S.Menu>

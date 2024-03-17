@@ -18,6 +18,11 @@ export const globalStyles = globalCss({
     '-webkit-font-smoothing': 'antialiased',
   },
 
+  'body, input, textarea, button': {
+    fontFamily: 'Nunito Sans, sans-serif',
+    fontWeight: 400,
+  },
+
   '#__next': {
     height: '100dvh',
   },

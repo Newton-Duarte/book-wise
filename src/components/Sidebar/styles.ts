@@ -21,6 +21,8 @@ export const Menu = styled('div', {
     gap: '0.75rem',
     textDecoration: 'none',
     color: '$gray400',
+    borderLeft: '4px solid transparent',
+    paddingLeft: '1rem',
 
     svg: {
       color: '$gray400',
@@ -30,7 +32,6 @@ export const Menu = styled('div', {
       color: '$gray100',
       fontWeight: 'bold',
       borderLeft: '4px solid $purple100',
-      paddingLeft: '1rem',
 
       svg: {
         color: '$gray100',
@@ -38,10 +39,9 @@ export const Menu = styled('div', {
     },
 
     '&:hover': {
+      color: '$gray100',
+
       svg: {
-        color: '$gray100',
-      },
-      p: {
         color: '$gray100',
       },
     },
@@ -55,9 +55,7 @@ export const Menu = styled('div', {
       },
 
       '&:hover': {
-        p: {
-          color: '$green100',
-        },
+        color: '$green100',
       },
     },
   },

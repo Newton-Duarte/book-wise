@@ -1,8 +1,6 @@
 import { styled } from '@/styles'
 
-export const Container = styled('div', {
-  maxWidth: '38rem',
-})
+export const Container = styled('div', {})
 
 export const Header = styled('div', {
   display: 'grid',
