@@ -1,5 +1,5 @@
 import { BookCard } from '@/components/BookCard'
-import { CaretRight, ChartLineUp } from 'phosphor-react'
+import { ChartLineUp } from 'phosphor-react'
 import { Text } from '@/components/Text'
 import { booksReviews } from '@/data/booksReviews'
 
@@ -7,7 +7,9 @@ import * as S from '@/styles/pages/Home.styles'
 import Image from 'next/image'
 import { Rating } from '@/components/Rating'
 import { useRouter } from 'next/router'
-import { EXPLORE_ROUTE } from '@/constants/app-routes'
+import { EXPLORE_ROUTE, PROFILE_ROUTE } from '@/constants/app-routes'
+import { LastRead } from './LastRead'
+import { ButtonLink } from '@/components/ButtonLink'
 
 export function Home() {
   const router = useRouter()
@@ -23,6 +25,13 @@ export function Home() {
 
       <S.Content>
         <S.BooksList>
+          <S.SectionHeader>
+            <Text size="sm">Sua última leitura</Text>
+            <ButtonLink onClick={() => router.push(PROFILE_ROUTE)}>
+              Ver todas
+            </ButtonLink>
+          </S.SectionHeader>
+          <LastRead book={booksReviews[1]?.book} />
           <Text size="sm">Avaliações mais recentes</Text>
           <S.ScrollBox>
             {booksReviews.map((bookReview) => (
@@ -36,13 +45,12 @@ export function Home() {
         </S.BooksList>
 
         <S.PopularBooks>
-          <S.PopularBooksHeader>
+          <S.SectionHeader>
             <Text size="sm">Livros populares</Text>
-            <button type="button" onClick={() => router.push(EXPLORE_ROUTE)}>
+            <ButtonLink onClick={() => router.push(EXPLORE_ROUTE)}>
               Ver todos
-              <CaretRight size={16} />
-            </button>
-          </S.PopularBooksHeader>
+            </ButtonLink>
+          </S.SectionHeader>
 
           <S.ScrollBox>
             {[1, 2, 3, 4, 5, 6].map((book) => (
