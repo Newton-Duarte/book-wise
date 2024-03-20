@@ -1,15 +1,15 @@
+import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { BookCard } from '@/components/BookCard'
 import { ChartLineUp } from 'phosphor-react'
 import { Text } from '@/components/Text'
 import { booksReviews } from '@/data/booksReviews'
-
-import * as S from '@/styles/pages/Home.styles'
-import Image from 'next/image'
 import { Rating } from '@/components/Rating'
-import { useRouter } from 'next/router'
 import { EXPLORE_ROUTE, PROFILE_ROUTE } from '@/constants/app-routes'
 import { LastRead } from './LastRead'
 import { ButtonLink } from '@/components/ButtonLink'
+
+import * as S from './styles'
 
 export function Home() {
   const router = useRouter()
