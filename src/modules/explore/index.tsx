@@ -1,7 +1,7 @@
 import { Binoculars } from 'phosphor-react'
 import { Text } from '@/components/Text'
 
-import * as S from '@/styles/pages/Home.styles'
+import * as S from './styles'
 
 export function Explore() {
   return (
