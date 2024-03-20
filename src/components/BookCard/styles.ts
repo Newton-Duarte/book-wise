@@ -1,6 +1,14 @@
 import { styled } from '@/styles'
 
-export const Container = styled('div', {})
+export const Container = styled('div', {
+  borderRadius: '$md',
+  border: '2px solid transparent',
+  cursor: 'pointer',
+
+  '&:hover': {
+    borderColor: '$gray500',
+  },
+})
 
 export const Header = styled('div', {
   display: 'grid',
