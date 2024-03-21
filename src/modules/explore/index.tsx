@@ -1,4 +1,4 @@
-import { Binoculars } from 'phosphor-react'
+import { Binoculars, X } from 'phosphor-react'
 import { Text } from '@/components/Text'
 import { TextField } from '@/components/TextField'
 
@@ -47,6 +47,7 @@ const tags = [
 
 export function Explore() {
   const [activeTag, setActiveTag] = useState(1)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   return (
     <S.Container>
@@ -73,7 +74,7 @@ export function Explore() {
 
       <S.Books>
         {books.map((book) => (
-          <S.Book key={book.id}>
+          <S.Book key={book.id} onClick={() => setIsSidebarOpen(true)}>
             <Image
               src={book.imageURL}
               width={108}
@@ -91,6 +92,13 @@ export function Explore() {
           </S.Book>
         ))}
       </S.Books>
+      <S.Sidebar variant={isSidebarOpen ? 'open' : 'closed'}>
+        <S.SidebarHeader>
+          <S.CloseButton onClick={() => setIsSidebarOpen(false)}>
+            <X size={24} />
+          </S.CloseButton>
+        </S.SidebarHeader>
+      </S.Sidebar>
     </S.Container>
   )
 }
