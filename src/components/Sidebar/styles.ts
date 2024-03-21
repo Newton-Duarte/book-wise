@@ -7,6 +7,7 @@ export const Container = styled('aside', {
   display: 'flex',
   flexDirection: 'column',
   gap: '4rem',
+  maxHeight: 'calc(100dvh - 2.5rem)',
 })
 
 export const Menu = styled('div', {
