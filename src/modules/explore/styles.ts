@@ -115,3 +115,68 @@ export const CloseButton = styled('button', {
   all: 'unset',
   cursor: 'pointer',
 })
+
+export const SidebarBookDetails = styled('div', {
+  display: 'grid',
+  gridTemplateColumns: '10.75rem 1fr',
+  gap: '$8',
+})
+
+export const SidebarBookInfo = styled(FlexCol, {
+  justifyContent: 'space-between',
+
+  span: {
+    color: '$gray300',
+  },
+
+  [`& ${FlexCol}`]: {
+    gap: '0.25rem',
+  },
+})
+
+export const SidebarBookFooter = styled('div', {
+  marginTop: '$10',
+  borderTop: '1px solid $gray600',
+  paddingTop: '$5',
+  display: 'grid',
+  gridTemplateColumns: 'repeat(2, 1fr)',
+
+  [`& ${FlexRow}`]: {
+    alignItems: 'center',
+    gap: '1rem',
+  },
+
+  svg: {
+    color: '$green100',
+  },
+})
+
+export const SidebarBookReviews = styled(FlexCol, {
+  marginTop: '$10',
+  gap: '0.75rem',
+})
+
+export const SidebarBookReview = styled(Box, {
+  [`& > ${FlexRow}`]: {
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: '$5',
+
+    img: {
+      marginRight: '1rem',
+      border: '2px solid #7FD1CC',
+      borderRadius: '$full',
+      objectFit: 'cover',
+    },
+
+    span: {
+      color: '$gray400',
+    },
+  },
+})
+
+export const SectionHeader = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+})
