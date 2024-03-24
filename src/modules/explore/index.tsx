@@ -1,4 +1,4 @@
-import { Binoculars, BookOpen, BookmarkSimple, X } from 'phosphor-react'
+import { Binoculars, BookOpen, BookmarkSimple, Check, X } from 'phosphor-react'
 import { Text } from '@/components/Text'
 import { TextField } from '@/components/TextField'
 
@@ -13,6 +13,9 @@ import { Book } from '@/@types/Book'
 import { Box } from '@/components/Box'
 import { FlexRow } from '@/components/FlexRow'
 import { Button } from '@/components/Button'
+import { TextArea } from '@/components/TextArea'
+import { LoginModal } from '@/components/LoginModal'
+import * as Dialog from '@radix-ui/react-dialog'
 
 const tags = [
   {
@@ -52,6 +55,7 @@ const tags = [
 export function Explore() {
   const [activeTag, setActiveTag] = useState(1)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isReviewing, setIsReviewing] = useState(false)
   const [selectedBook, setSelectedBook] = useState<Book | null>(null)
 
   const sidebarRef = useRef<null | HTMLElement>(null)
@@ -173,12 +177,47 @@ export function Explore() {
             </Box>
             <S.SectionHeader style={{ marginTop: '2.5rem' }}>
               <Text size="sm">Avaliações</Text>
-              <Button variant="text">Avaliar</Button>
+              <Dialog.Root>
+                <Dialog.Trigger asChild>
+                  <Button variant="text">Avaliar</Button>
+                </Dialog.Trigger>
+                <LoginModal />
+              </Dialog.Root>
             </S.SectionHeader>
 
             <S.SidebarBookReviews>
+              {isReviewing && (
+                <S.SidebarBookReviewForm as="form">
+                  <FlexRow>
+                    <FlexRow>
+                      <Image
+                        src="https://github.com/newton-duarte.png"
+                        width={40}
+                        height={40}
+                        alt=""
+                      />
+                      <Text size="md" as="h6">
+                        Newton Duarte
+                      </Text>
+                    </FlexRow>
+                    <Rating />
+                  </FlexRow>
+                  <TextArea placeholder="Escreva sua avaliação" />
+                  <S.SidebarBookReviewFormActions>
+                    <button type="button" onClick={() => setIsReviewing(false)}>
+                      <X size={24} />
+                    </button>
+                    <button type="submit">
+                      <Check size={24} />
+                    </button>
+                  </S.SidebarBookReviewFormActions>
+                </S.SidebarBookReviewForm>
+              )}
               {[1, 2, 3].map((review) => (
-                <S.SidebarBookReview key={review}>
+                <S.SidebarBookReview
+                  key={review}
+                  className={review === 1 ? 'current-user-review' : ''}
+                >
                   <FlexRow>
                     <FlexRow>
                       <Image

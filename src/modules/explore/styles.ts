@@ -1,6 +1,7 @@
 import { Box } from '@/components/Box'
 import { FlexCol } from '@/components/FlexCol'
 import { FlexRow } from '@/components/FlexRow'
+import { TextArea } from '@/components/TextArea'
 import { styled } from '@/styles'
 
 export const Container = styled('div', {
@@ -152,11 +153,15 @@ export const SidebarBookFooter = styled('div', {
 })
 
 export const SidebarBookReviews = styled(FlexCol, {
-  marginTop: '$10',
+  // marginTop: '$10',
   gap: '0.75rem',
 })
 
 export const SidebarBookReview = styled(Box, {
+  '&.current-user-review': {
+    background: '$gray600',
+  },
+
   [`& > ${FlexRow}`]: {
     justifyContent: 'space-between',
     alignItems: 'flex-start',
@@ -171,6 +176,66 @@ export const SidebarBookReview = styled(Box, {
 
     span: {
       color: '$gray400',
+    },
+  },
+})
+
+export const SidebarBookReviewForm = styled(Box, {
+  [`& > ${FlexRow}`]: {
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: '$5',
+
+    img: {
+      marginRight: '1rem',
+      border: '2px solid #7FD1CC',
+      borderRadius: '$full',
+      objectFit: 'cover',
+    },
+
+    [`& > ${FlexRow}`]: {
+      alignItems: 'center',
+    },
+  },
+
+  [`& > ${TextArea}`]: {
+    width: '100%',
+    height: '10.25rem',
+  },
+})
+
+export const SidebarBookReviewFormActions = styled(FlexRow, {
+  justifyContent: 'flex-end !important',
+  gap: '0.5rem',
+  marginTop: '0.75rem',
+  marginBottom: '0 !important',
+
+  button: {
+    all: 'unset',
+    cursor: 'pointer',
+    width: '2.5rem',
+    height: '2.5rem',
+    background: '$gray600',
+    borderRadius: '$sm',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    '&:hover': {
+      filter: 'brightness(0.8)',
+      transition: 'filter 0.2s',
+    },
+
+    '&:first-of-type': {
+      svg: {
+        color: '$purple100',
+      },
+    },
+
+    '&:last-of-type': {
+      svg: {
+        color: '$green100',
+      },
     },
   },
 })
