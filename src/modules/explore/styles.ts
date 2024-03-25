@@ -142,6 +142,15 @@ export const SidebarBookFooter = styled('div', {
   display: 'grid',
   gridTemplateColumns: 'repeat(2, 1fr)',
 
+  p: {
+    color: '$gray300',
+  },
+
+  span: {
+    color: '$gray200',
+    fontWeight: 'bold',
+  },
+
   [`& ${FlexRow}`]: {
     alignItems: 'center',
     gap: '1rem',
