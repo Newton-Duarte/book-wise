@@ -6,12 +6,13 @@ import { Text } from '../Text'
 import { FlexCol } from '../FlexCol'
 import googleLogoImg from '@/assets/images/google-logo.png'
 import githubLogoImg from '@/assets/images/github-logo.png'
+import { forwardRef } from 'react'
 
-export function LoginModal() {
+export const LoginModal = forwardRef<HTMLDivElement>((props, ref) => {
   return (
     <Dialog.Portal>
       <S.Overlay />
-      <S.Content>
+      <S.Content ref={ref}>
         <S.CloseButton>
           <X size={24} />
         </S.CloseButton>
@@ -33,4 +34,6 @@ export function LoginModal() {
       </S.Content>
     </Dialog.Portal>
   )
-}
+})
+
+LoginModal.displayName = 'LoginModal'

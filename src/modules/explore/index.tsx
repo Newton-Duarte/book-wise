@@ -59,11 +59,13 @@ export function Explore() {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null)
 
   const sidebarRef = useRef<null | HTMLElement>(null)
+  const modalRef = useRef<null | HTMLDivElement>(null)
 
   const handleClickOutsideSidebar = (event: MouseEvent) => {
     if (
       sidebarRef.current &&
-      !sidebarRef.current.contains(event.target as Node)
+      !sidebarRef.current.contains(event.target as Node) &&
+      !modalRef?.current?.contains(event.target as Node)
     ) {
       setIsSidebarOpen(false)
       setSelectedBook(null)
@@ -162,26 +164,30 @@ export function Explore() {
                 <FlexRow>
                   <BookmarkSimple size={24} />
                   <FlexCol>
-                    <Text>Categoria</Text>
-                    <Text>Computação, educação</Text>
+                    <Text size="sm">Categoria</Text>
+                    <Text as="span" size="md">
+                      Computação, educação
+                    </Text>
                   </FlexCol>
                 </FlexRow>
                 <FlexRow>
                   <BookOpen size={24} />
                   <FlexCol>
-                    <Text>Páginas</Text>
-                    <Text>160</Text>
+                    <Text size="sm">Páginas</Text>
+                    <Text as="span" size="md">
+                      160
+                    </Text>
                   </FlexCol>
                 </FlexRow>
               </S.SidebarBookFooter>
             </Box>
-            <S.SectionHeader style={{ marginTop: '2.5rem' }}>
+            <S.SectionHeader style={{ margin: '2.5rem 0 1rem' }}>
               <Text size="sm">Avaliações</Text>
               <Dialog.Root>
                 <Dialog.Trigger asChild>
                   <Button variant="text">Avaliar</Button>
                 </Dialog.Trigger>
-                <LoginModal />
+                <LoginModal ref={modalRef} />
               </Dialog.Root>
             </S.SectionHeader>
 
