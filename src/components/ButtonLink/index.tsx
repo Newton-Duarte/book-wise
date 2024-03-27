@@ -1,9 +1,10 @@
-import { ReactNode } from 'react'
+import { ElementType, ReactNode } from 'react'
 import { CaretRight } from 'phosphor-react'
 
 import * as S from './styles'
 
 type ButtonLink = {
+  as?: ElementType
   children: ReactNode
   onClick: () => void
 }
