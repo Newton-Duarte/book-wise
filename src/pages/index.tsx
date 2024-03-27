@@ -1,9 +1,13 @@
 import { ReactElement } from 'react'
-import { Login } from '@/modules/auth/login'
+import { LoginModule } from '@/modules/auth/login'
 import { NextPageWithLayout } from './_app'
+import { GetServerSideProps } from 'next'
+import { getServerSession } from 'next-auth'
+import { authOptions } from './api/auth/[...nextauth]'
+import { HOME_ROUTE } from '@/constants/app-routes'
 
 const LoginPage: NextPageWithLayout = () => {
-  return <Login />
+  return <LoginModule />
 }
 
 LoginPage.getLayout = function getLayout(page: ReactElement) {
@@ -11,3 +15,22 @@ LoginPage.getLayout = function getLayout(page: ReactElement) {
 }
 
 export default LoginPage
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = await getServerSession(req, res, authOptions)
+
+  if (session?.user) {
+    return {
+      redirect: {
+        destination: HOME_ROUTE,
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: {
+      session,
+    },
+  }
+}
