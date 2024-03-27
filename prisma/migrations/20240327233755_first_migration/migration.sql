@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
+    "email" TEXT,
     "name" TEXT NOT NULL,
     "emailVerified" TIMESTAMP(3),
     "image" TEXT,
