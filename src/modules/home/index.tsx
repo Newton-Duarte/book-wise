@@ -11,7 +11,7 @@ import { ButtonLink } from '@/components/ButtonLink'
 
 import * as S from './styles'
 
-export function Home() {
+export function HomeModule() {
   const router = useRouter()
 
   return (
