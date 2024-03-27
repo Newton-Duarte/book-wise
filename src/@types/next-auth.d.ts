@@ -8,7 +8,7 @@ declare module 'next-auth' {
     name: string
     emailVerified: Date | null
     image: string
-    created_at: string
+    created_at: Date
   }
 
   interface Session {
