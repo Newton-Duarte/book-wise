@@ -7,11 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users {
-  id         String   @id @default(uuid())
-  name       String
-  avatar_url String?
-  created_at DateTime @default(now())
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  name          String
+  emailVerified DateTime?
+  image         String?
+  created_at    DateTime  @default(now())
 
   accounts Account[]
   sessions Session[]
@@ -20,7 +22,7 @@ model Users {
   @@map("users")
 }
 
-model Books {
+model Book {
   id          String   @id @default(uuid())
   title       String
   author      String
@@ -35,7 +37,7 @@ model Books {
   @@map("books")
 }
 
-model Categories {
+model Category {
   id         String   @id @default(uuid())
   name       String   @unique
   created_at DateTime @default(now())
@@ -49,8 +51,8 @@ model CategoriesOnBooks {
   book_id    String
   categoryId String
 
-  book     Books      @relation(fields: [book_id], references: [id])
-  category Categories @relation(fields: [categoryId], references: [id])
+  book     Book     @relation(fields: [book_id], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
 
   @@id([book_id, categoryId])
 }
@@ -61,40 +63,41 @@ model Rating {
   description String
   created_at  DateTime @default(now())
 
-  book    Books  @relation(fields: [book_id], references: [id])
+  book    Book   @relation(fields: [book_id], references: [id])
   book_id String
 
-  user    Users  @relation(fields: [user_id], references: [id])
+  user    User   @relation(fields: [user_id], references: [id])
   user_id String
 
   @@map("ratings")
 }
 
 model Account {
-  id                  String  @id @default(cuid())
-  user_id             String
-  type                String
-  provider            String
-  provider_account_id String
-  refresh_token       String?
-  access_token        String?
-  expires_at          Int?
-  token_type          String?
-  scope               String?
-  id_token            String?
-  session_state       String?
-  user                Users   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
 
-  @@unique([provider, provider_account_id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
   @@map("accounts")
 }
 
 model Session {
-  id            String   @id @default(cuid())
-  session_token String   @unique
-  user_id       String
-  expires       DateTime
-  user          Users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
 }
