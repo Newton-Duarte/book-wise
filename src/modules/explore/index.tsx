@@ -52,7 +52,7 @@ const tags = [
   },
 ]
 
-export function Explore() {
+export function ExploreModule() {
   const [activeTag, setActiveTag] = useState(1)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isReviewing, setIsReviewing] = useState(false)

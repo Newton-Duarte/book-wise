@@ -1,10 +1,10 @@
 import { ReactElement } from 'react'
 import { DefaultLayout } from '@/layouts/DefaultLayout'
-import { Explore } from '@/modules/explore'
+import { ExploreModule } from '@/modules/explore'
 import { NextPageWithLayout } from '../_app'
 
 const ExplorePage: NextPageWithLayout = () => {
-  return <Explore />
+  return <ExploreModule />
 }
 
 ExplorePage.getLayout = function getLayout(page: ReactElement) {
