@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/Button'
@@ -11,8 +12,12 @@ import githubLogoImg from '@/assets/images/github-logo.png'
 
 import * as S from './styles'
 
-export function Login() {
+export function LoginModule() {
   const router = useRouter()
+
+  const handleGoogleSignIn = async () => {
+    await signIn('google')
+  }
 
   return (
     <S.Container>
@@ -27,7 +32,7 @@ export function Login() {
 
         <ul>
           <li>
-            <Button>
+            <Button onClick={handleGoogleSignIn}>
               <Image src={googleLogoImg} width={32} height={32} alt="" />
               Entrar com Google
             </Button>
