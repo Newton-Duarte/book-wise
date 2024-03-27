@@ -1,15 +1,23 @@
+import Link from 'next/link'
 import Image from 'next/image'
-import logoImg from '@/assets/images/logo.png'
+import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
+import { Binoculars, ChartLineUp, SignIn, User } from 'phosphor-react'
 
-import { Text } from '../Text'
+import logoImg from '@/assets/images/logo.png'
+import { Avatar } from '../Avatar'
+import { getFirstWord } from '@/utils/getFirstWord'
+import { ButtonLink } from '../ButtonLink'
 
 import * as S from './styles'
-import Link from 'next/link'
-import { Binoculars, ChartLineUp, SignIn, User } from 'phosphor-react'
-import { useRouter } from 'next/router'
 
 export function Sidebar() {
   const router = useRouter()
+
+  const session = useSession()
+
+  const currentUser = session?.data?.user
+  const isAuthenticated = !!currentUser
 
   return (
     <S.Container>
@@ -37,10 +45,18 @@ export function Sidebar() {
           Perfil
         </Link>
 
-        <Link href="/">
-          Fazer login
-          <SignIn size={20} />
-        </Link>
+        {isAuthenticated ? (
+          <ButtonLink as="a" className="logout">
+            <Avatar src={currentUser?.image} name={currentUser?.name} />
+            {getFirstWord(currentUser?.name)}
+            <SignIn size={20} />
+          </ButtonLink>
+        ) : (
+          <Link href="/">
+            Fazer login
+            <SignIn size={20} />
+          </Link>
+        )}
       </S.Menu>
     </S.Container>
   )

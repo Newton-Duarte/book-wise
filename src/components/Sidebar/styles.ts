@@ -59,5 +59,15 @@ export const Menu = styled('div', {
         color: '$green100',
       },
     },
+
+    '&.logout': {
+      svg: {
+        color: '$danger',
+      },
+
+      '&:hover': {
+        color: '$danger',
+      },
+    },
   },
 })
