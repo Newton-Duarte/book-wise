@@ -1,13 +1,13 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { Binoculars, ChartLineUp, SignIn, User } from 'phosphor-react'
 
 import logoImg from '@/assets/images/logo.png'
 import { Avatar } from '../Avatar'
 import { getFirstWord } from '@/utils/getFirstWord'
-import { ButtonLink } from '../ButtonLink'
+import { Button } from '../Button'
 
 import * as S from './styles'
 
@@ -37,20 +37,22 @@ export function Sidebar() {
           <Binoculars size={24} />
           Explorar
         </Link>
-        <Link
-          href="/profile"
-          className={router.pathname === '/profile' ? 'active' : ''}
-        >
-          <User size={24} />
-          Perfil
-        </Link>
 
         {isAuthenticated ? (
-          <ButtonLink as="a" className="logout">
-            <Avatar src={currentUser?.image} name={currentUser?.name} />
-            {getFirstWord(currentUser?.name)}
-            <SignIn size={20} />
-          </ButtonLink>
+          <>
+            <Link
+              href="/profile"
+              className={router.pathname === '/profile' ? 'active' : ''}
+            >
+              <User size={24} />
+              Perfil
+            </Link>
+            <Button as="a" className="logout" onClick={() => signOut()}>
+              <Avatar src={currentUser?.image} name={currentUser?.name} />
+              {getFirstWord(currentUser?.name)}
+              <SignIn size={20} />
+            </Button>
+          </>
         ) : (
           <Link href="/">
             Fazer login

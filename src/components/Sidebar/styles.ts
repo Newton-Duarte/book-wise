@@ -66,7 +66,7 @@ export const Menu = styled('div', {
       },
 
       '&:hover': {
-        color: '$danger',
+        color: '$gray100',
       },
     },
   },
