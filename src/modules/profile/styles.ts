@@ -42,10 +42,7 @@ export const Analytics = styled('div', {
   padding: '0 3.625rem $5',
 
   img: {
-    border: '2px solid #7FD1CC',
     marginBottom: '$5',
-    borderRadius: '$full',
-    objectFit: 'cover',
   },
 
   h3: {
@@ -66,7 +63,7 @@ export const Divider = styled('div', {
   height: '0.25rem',
   background: '$gradient-horizontal',
   borderRadius: '$full',
-  margin: '3.25rem 0',
+  margin: '3rem 0',
 })
 
 export const AnalyticsItems = styled('div', {

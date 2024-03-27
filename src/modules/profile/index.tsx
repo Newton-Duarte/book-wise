@@ -3,23 +3,29 @@ import {
   BookmarkSimple,
   Books,
   MagnifyingGlass,
-  User,
+  User as UserIcon,
   UserList,
 } from 'phosphor-react'
+import dayjs from 'dayjs'
 import { Text } from '@/components/Text'
 import { TextField } from '@/components/TextField'
 
-import * as S from './styles'
 import { BookReview } from './BookReview'
 import { booksReviews } from '@/data/booksReviews'
-import Image from 'next/image'
 import { FlexCol } from '@/components/FlexCol'
+import { Avatar } from '@/components/Avatar'
+import { User } from '@/@types/User'
+import * as S from './styles'
 
-export function Profile() {
+type ProfileModuleProps = {
+  user?: User
+}
+
+export function ProfileModule({ user }: ProfileModuleProps) {
   return (
     <S.Container>
       <S.Header>
-        <User size={32} />
+        <UserIcon size={32} />
         <Text as="h2" size="2xl">
           Perfil
         </Text>
@@ -39,18 +45,13 @@ export function Profile() {
         </S.BooksReviewsList>
 
         <S.Analytics>
-          <Image
-            src="https://github.com/newton-duarte.png"
-            width={72}
-            height={72}
-            alt=""
-          />
+          <Avatar src={user?.image || ''} name={user?.name || ''} size="xl" />
           <FlexCol>
             <Text as="h3" size="lg">
-              Newton Duarte
+              {user?.name || ''}
             </Text>
             <Text as="span" size="sm">
-              membro desde 2024
+              membro desde {dayjs(user?.created_at).format('YYYY')}
             </Text>
           </FlexCol>
 
