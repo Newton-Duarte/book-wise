@@ -3,6 +3,7 @@ export type Book = {
   author: string
   title: string
   description: string
-  imageURL: string
+  cover_url: string
+  total_pages: number
   rating: number
 }
