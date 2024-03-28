@@ -1,37 +1,38 @@
 import Image from 'next/image'
-import { Book } from '@/@types/Book'
 import { Text } from '@/components/Text'
 import { Rating } from '@/components/Rating'
 import { FlexCol } from '@/components/FlexCol'
+import { dayjs } from '@/lib/dayjs'
+import { Rating as UserRating } from '@/@types/Rating'
 
 import * as S from './styles'
 
 export type BookReviewProps = {
-  book: Book
+  rating: UserRating
 }
 
-export function BookReview({ book }: BookReviewProps) {
+export function BookReview({ rating }: BookReviewProps) {
   return (
     <S.Wrapper>
-      <Text as="p">Há 2 dias</Text>
+      <Text as="p">{dayjs(rating.created_at).fromNow()}</Text>
 
       <S.Container>
-        <Image src={book.imageURL} width={98} height={134} alt="" />
+        <Image src={rating.book.cover_url} width={98} height={134} alt="" />
 
         <S.Header>
           <FlexCol>
             <Text as="h3" size="lg">
-              {book.title}
+              {rating.book.title}
             </Text>
             <Text size="sm" as="span">
-              {book.author}
+              {rating.book.author}
             </Text>
           </FlexCol>
 
           <Rating />
         </S.Header>
         <S.Details>
-          <Text size="sm">{book.description}</Text>
+          <Text size="sm">{rating.description}</Text>
         </S.Details>
       </S.Container>
     </S.Wrapper>
