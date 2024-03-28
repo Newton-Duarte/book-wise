@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import {
   BookOpen,
   BookmarkSimple,
@@ -18,36 +18,56 @@ import { ProfilePageProps } from '@/pages/profile'
 
 import * as S from './styles'
 
-type UserAnalytics = {
-  readPages: number
-  reviewedBooks: number
-  readAuthors: number
-  mostReadCategory: string
-}
-
 export function ProfileModule({ user, ratings }: ProfilePageProps) {
-  console.log(ratings)
+  const [search, setSearch] = useState('')
 
-  const analytics = useMemo(() => {
-    return ratings?.reduce<UserAnalytics>(
-      (summary, rating) => {
-        summary.readPages += rating.book.total_pages
-        summary.reviewedBooks += 1
-        summary.readAuthors += 1
-        summary.mostReadCategory = 'Fantasia'
-
-        return summary
-      },
-      {
-        readPages: 0,
-        reviewedBooks: 0,
-        readAuthors: 0,
-        mostReadCategory: '',
-      },
+  const readPages = useMemo(() => {
+    return ratings.reduce(
+      (total, rating) => (total += rating.book.total_pages),
+      0,
     )
   }, [ratings])
 
-  console.log(analytics)
+  const readAuthors = useMemo(() => {
+    const allAuthors = ratings.map((rating) => rating.book.author)
+    const uniqueAuthors = [...new Set(allAuthors)]
+
+    return uniqueAuthors?.length || 0
+  }, [ratings])
+
+  const mostReadCategory = useMemo(() => {
+    const allCategories = ratings.map((rating) =>
+      rating.book.categories
+        .map((bookCategory) => bookCategory.category.name)
+        .join(', '),
+    )
+
+    const categoriesCounts: Record<string, number> = {}
+    allCategories.forEach((category) => {
+      categoriesCounts[category] = (categoriesCounts[category] || 0) + 1
+    })
+
+    let mostRead = ''
+    let currentReads = 0
+
+    Object.entries(categoriesCounts).forEach((category) => {
+      const categoryName = category[0]
+      const categoryReadsCount = category[1]
+
+      if (categoryReadsCount > currentReads) {
+        currentReads = categoryReadsCount
+        mostRead = categoryName
+      }
+    })
+
+    return mostRead
+  }, [ratings])
+
+  const computedRatings = search
+    ? ratings.filter((rating) =>
+        rating.book.title.toLowerCase().includes(search.toLowerCase()),
+      )
+    : ratings
 
   return (
     <S.Container>
@@ -62,15 +82,20 @@ export function ProfileModule({ user, ratings }: ProfilePageProps) {
         <S.BooksReviewsList>
           <S.SearchContainer>
             <TextField
+              type="search"
+              value={search}
+              onChange={({ target }) => setSearch(target.value)}
               placeholder="Buscar livro avaliado"
               endIcon={<MagnifyingGlass size={20} />}
             />
           </S.SearchContainer>
 
-          {ratings?.length ? (
-            ratings.map((rating) => (
+          {computedRatings?.length ? (
+            computedRatings.map((rating) => (
               <BookReview key={rating.id} rating={rating} />
             ))
+          ) : search ? (
+            <Text>Nenhum livro encontrado</Text>
           ) : (
             <Text>Você ainda não tem livros avaliados</Text>
           )}
@@ -93,7 +118,7 @@ export function ProfileModule({ user, ratings }: ProfilePageProps) {
             <S.AnalyticsItem>
               <BookOpen size={32} />
               <FlexCol>
-                <Text as="h6">{analytics.readPages}</Text>
+                <Text as="h6">{readPages}</Text>
                 <Text as="span" size="sm">
                   Páginas lidas
                 </Text>
@@ -102,7 +127,7 @@ export function ProfileModule({ user, ratings }: ProfilePageProps) {
             <S.AnalyticsItem>
               <Books size={32} />
               <FlexCol>
-                <Text as="h6">{analytics.reviewedBooks}</Text>
+                <Text as="h6">{ratings?.length || 0}</Text>
                 <Text as="span" size="sm">
                   Livros avaliados
                 </Text>
@@ -111,7 +136,7 @@ export function ProfileModule({ user, ratings }: ProfilePageProps) {
             <S.AnalyticsItem>
               <UserList size={32} />
               <FlexCol>
-                <Text as="h6">{analytics.readAuthors}</Text>
+                <Text as="h6">{readAuthors}</Text>
                 <Text as="span" size="sm">
                   Autores lidos
                 </Text>
@@ -120,7 +145,7 @@ export function ProfileModule({ user, ratings }: ProfilePageProps) {
             <S.AnalyticsItem>
               <BookmarkSimple size={32} />
               <FlexCol>
-                <Text as="h6">{analytics.mostReadCategory}</Text>
+                <Text as="h6">{mostReadCategory}</Text>
                 <Text as="span" size="sm">
                   Categoria mais lida
                 </Text>
