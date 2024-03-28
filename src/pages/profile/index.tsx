@@ -42,7 +42,20 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       user_id: session.user.id,
     },
     include: {
-      book: true,
+      book: {
+        include: {
+          categories: {
+            include: {
+              category: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      },
     },
   })
 
