@@ -6,8 +6,16 @@ import { GetServerSideProps } from 'next'
 import { authOptions } from '../api/auth/[...nextauth]'
 import { getServerSession } from 'next-auth'
 import { HOME_ROUTE } from '@/constants/app-routes'
+import { User } from '@/@types/User'
+import { prisma } from '@/lib/prisma'
+import { Rating } from '@/@types/Rating'
 
-const ProfilePage: NextPageWithLayout = (props) => {
+export type ProfilePageProps = {
+  user: User
+  ratings: Rating[]
+}
+
+const ProfilePage: NextPageWithLayout<ProfilePageProps> = (props) => {
   return <ProfileModule {...props} />
 }
 
@@ -29,9 +37,26 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     }
   }
 
+  const userRatings = await prisma.rating.findMany({
+    where: {
+      user_id: session.user.id,
+    },
+    include: {
+      book: true,
+    },
+  })
+
   return {
     props: {
       user: session.user,
+      ratings: userRatings?.map((rating) => ({
+        ...rating,
+        book: {
+          ...rating.book,
+          created_at: rating.book.created_at.toISOString(),
+        },
+        created_at: rating.created_at.toISOString(),
+      })),
     },
   }
 }
