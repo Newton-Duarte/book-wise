@@ -1,3 +1,9 @@
+import { Category } from './Category'
+
+type BookCategory = {
+  category: Category
+}
+
 export type Book = {
   id: string
   author: string
@@ -5,5 +11,6 @@ export type Book = {
   description: string
   cover_url: string
   total_pages: number
+  categories: BookCategory[]
   rating: number
 }
