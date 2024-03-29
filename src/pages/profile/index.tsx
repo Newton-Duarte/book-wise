@@ -13,6 +13,7 @@ import { Rating } from '@/@types/Rating'
 export type ProfilePageProps = {
   user: User
   ratings: Rating[]
+  backLink?: boolean
 }
 
 const ProfilePage: NextPageWithLayout<ProfilePageProps> = (props) => {
