@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useRouter } from 'next/router'
 import {
   BookOpen,
   BookmarkSimple,
@@ -15,11 +16,15 @@ import { BookReview } from './BookReview'
 import { FlexCol } from '@/components/FlexCol'
 import { Avatar } from '@/components/Avatar'
 import { ProfilePageProps } from '@/pages/profile'
+import { BackLink } from '@/components/BackLink'
+import { HOME_ROUTE } from '@/constants/app-routes'
 
 import * as S from './styles'
 
-export function ProfileModule({ user, ratings }: ProfilePageProps) {
+export function ProfileModule({ user, ratings, backLink }: ProfilePageProps) {
   const [search, setSearch] = useState('')
+
+  const router = useRouter()
 
   const readPages = useMemo(() => {
     return ratings.reduce(
@@ -71,12 +76,16 @@ export function ProfileModule({ user, ratings }: ProfilePageProps) {
 
   return (
     <S.Container>
-      <S.Header>
-        <UserIcon size={32} />
-        <Text as="h2" size="2xl">
-          Perfil
-        </Text>
-      </S.Header>
+      {backLink ? (
+        <BackLink onClick={() => router.push(HOME_ROUTE)}>Voltar</BackLink>
+      ) : (
+        <S.Header>
+          <UserIcon size={32} />
+          <Text as="h2" size="2xl">
+            Perfil
+          </Text>
+        </S.Header>
+      )}
 
       <S.Content>
         <S.BooksReviewsList>
@@ -97,7 +106,7 @@ export function ProfileModule({ user, ratings }: ProfilePageProps) {
           ) : search ? (
             <Text>Nenhum livro encontrado</Text>
           ) : (
-            <Text>Você ainda não tem livros avaliados</Text>
+            <Text>Nenhum livro avaliado encontrado</Text>
           )}
         </S.BooksReviewsList>
 
