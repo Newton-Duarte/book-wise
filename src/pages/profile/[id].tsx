@@ -2,7 +2,7 @@ import { ReactElement } from 'react'
 import { DefaultLayout } from '@/layouts/DefaultLayout'
 import { ProfileModule } from '@/modules/profile'
 import { NextPageWithLayout } from '../_app'
-import { GetServerSideProps } from 'next'
+import { GetStaticPaths, GetStaticProps } from 'next'
 import { HOME_ROUTE } from '@/constants/app-routes'
 import { User } from '@/@types/User'
 import { prisma } from '@/lib/prisma'
@@ -23,7 +23,14 @@ ProfilePage.getLayout = function getLayout(page: ReactElement) {
 
 export default ProfilePage
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  }
+}
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
   const userId = String(params?.id)
 
   const user = await prisma.user.findUnique({
@@ -79,5 +86,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
         created_at: rating.created_at.toISOString(),
       })),
     },
+    revalidate: 60 * 60 * 1, // 1 hour
   }
 }
