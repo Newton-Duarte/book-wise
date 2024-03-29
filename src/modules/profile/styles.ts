@@ -1,7 +1,7 @@
 import { styled } from '@/styles'
 
 export const Container = styled('div', {
-  marginTop: '4.5rem',
+  marginTop: '$10',
 })
 
 export const Header = styled('div', {
