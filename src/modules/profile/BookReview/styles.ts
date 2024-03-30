@@ -16,7 +16,7 @@ export const Container = styled('div', {
   gridTemplateColumns: '6.75rem 1fr',
   gap: '1rem',
   padding: '1.5rem 1.5rem',
-  background: '$gray600',
+  background: '$gray700',
   borderRadius: '8px',
 })
 
