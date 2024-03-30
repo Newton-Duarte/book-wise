@@ -25,7 +25,6 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ account }) {
-      console.log('callback signIn', account?.scope)
       if (!account?.scope?.includes(googleAuthScope)) {
         return '?error=permissions'
       }
