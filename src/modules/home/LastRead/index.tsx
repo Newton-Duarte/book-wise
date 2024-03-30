@@ -1,37 +1,37 @@
 import Image from 'next/image'
-import { useMemo } from 'react'
-import { Book } from '@/@types/Book'
 import { Text } from '@/components/Text'
 import { Rating } from '@/components/Rating'
 import { FlexCol } from '@/components/FlexCol'
+import { Rating as RatingType } from '@/@types/Rating'
+import { dayjs } from '@/lib/dayjs'
+import { ellipsisText } from '@/utils/ellipsisText'
+
 import * as S from './styles'
 
 export type LastReadProps = {
-  book: Book
+  rating: RatingType
 }
 
-export function LastRead({ book }: LastReadProps) {
-  const bookDescription = useMemo(() => {
-    return `${book.description.substring(0, 110)}...`
-  }, [book.description])
-
+export function LastRead({ rating }: LastReadProps) {
   return (
     <S.Container>
-      <Image src={book.imageURL} width={108} height={152} alt="" />
+      <Image src={rating.book.cover_url} width={108} height={152} alt="" />
 
       <S.Content>
         <S.Header>
-          <Text as="span">Hoje</Text>
+          <Text as="span" size="sm">
+            {dayjs(rating.created_at).fromNow()}
+          </Text>
           <Rating />
         </S.Header>
         <S.Details>
           <FlexCol>
-            <Text as="h3">{book.title}</Text>
+            <Text as="h3">{rating.book.title}</Text>
             <Text size="sm" as="span">
-              {book.author}
+              {rating.book.author}
             </Text>
           </FlexCol>
-          <Text size="sm">{bookDescription}</Text>
+          <Text size="sm">{ellipsisText(rating.book.summary, 130)}</Text>
         </S.Details>
       </S.Content>
     </S.Container>
