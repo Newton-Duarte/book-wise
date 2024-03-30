@@ -1,48 +1,52 @@
+import { useMemo, useState } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
 import { Box } from '../Box'
 import { FlexCol } from '../FlexCol'
 import { Rating } from '../Rating'
 import { Text } from '../Text'
 
-import * as S from './styles'
-import Image from 'next/image'
 import { Button } from '../Button'
-import { useMemo, useState } from 'react'
-import { Book } from '@/@types/Book'
-import { User } from '@/@types/User'
+import { Rating as RatingType } from '@/@types/Rating'
+import { dayjs } from '@/lib/dayjs'
+import { Avatar } from '../Avatar'
+
+import * as S from './styles'
 
 export type BookCardProps = {
-  user: User
-  book: Book
+  rating: RatingType
 }
 
-export function BookCard({ user, book }: BookCardProps) {
+export function BookCard({ rating }: BookCardProps) {
   const [showDescription, setShowDescription] = useState(false)
 
   const bookDescription = useMemo(() => {
     return showDescription
-      ? book.description
-      : book.description.substring(0, 220)
-  }, [book.description, showDescription])
+      ? rating.description
+      : rating.description.substring(0, 220)
+  }, [rating.description, showDescription])
 
   return (
     <S.Container>
       <Box>
         <S.Header>
-          <Image src={user.avatarURL} width={40} height={40} alt={user.name} />
+          <Link href={`/profile/${rating.user.id}`}>
+            <Avatar src={rating.user.image} size="lg" name={rating.user.name} />
+          </Link>
           <FlexCol>
-            <Text>{user.name}</Text>
-            <Text as="span">Hoje</Text>
+            <Text>{rating.user.name}</Text>
+            <Text as="span">{dayjs(rating.created_at).fromNow()}</Text>
           </FlexCol>
           <Rating />
         </S.Header>
 
         <S.Content>
-          <Image src={book.imageURL} width={108} height={152} alt="" />
+          <Image src={rating.book.cover_url} width={108} height={152} alt="" />
           <S.Details>
             <FlexCol>
-              <Text as="h3">{book.title}</Text>
+              <Text as="h3">{rating.book.title}</Text>
               <Text size="sm" as="span">
-                {book.author}
+                {rating.book.author}
               </Text>
             </FlexCol>
             <Text size="sm">

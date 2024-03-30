@@ -10,11 +10,10 @@ export const Header = styled('div', {
   alignItems: 'start',
   gap: '1rem',
 
-  img: {
+  a: {
     width: '2.5rem',
     height: '2.5rem',
-    borderRadius: '50%',
-    objectFit: 'cover',
+    alignSelf: 'center',
   },
 
   p: {
