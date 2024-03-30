@@ -62,6 +62,10 @@ export const SectionHeader = styled('div', {
   alignItems: 'center',
   justifyContent: 'space-between',
   paddingRight: '1rem',
+
+  p: {
+    color: '$gray100',
+  },
 })
 
 export const PopularBook = styled('div', {

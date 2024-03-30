@@ -3,15 +3,20 @@ import { useRouter } from 'next/router'
 import { BookCard } from '@/components/BookCard'
 import { ChartLineUp } from 'phosphor-react'
 import { Text } from '@/components/Text'
-import { booksReviews } from '@/data/booksReviews'
 import { Rating } from '@/components/Rating'
 import { EXPLORE_ROUTE, PROFILE_ROUTE } from '@/constants/app-routes'
 import { LastRead } from './LastRead'
 import { ButtonLink } from '@/components/ButtonLink'
+import { HomePageProps } from '@/pages/home'
+import { ellipsisText } from '@/utils/ellipsisText'
 
 import * as S from './styles'
 
-export function HomeModule() {
+export function HomeModule({
+  lastUserRating,
+  ratings,
+  popularBooks,
+}: HomePageProps) {
   const router = useRouter()
 
   return (
@@ -25,21 +30,21 @@ export function HomeModule() {
 
       <S.Content>
         <S.BooksList>
-          <S.SectionHeader>
-            <Text size="sm">Sua última leitura</Text>
-            <ButtonLink onClick={() => router.push(PROFILE_ROUTE)}>
-              Ver todas
-            </ButtonLink>
-          </S.SectionHeader>
-          <LastRead book={booksReviews[1]?.book} />
+          {!!lastUserRating && (
+            <>
+              <S.SectionHeader>
+                <Text size="sm">Sua última leitura</Text>
+                <ButtonLink onClick={() => router.push(PROFILE_ROUTE)}>
+                  Ver todas
+                </ButtonLink>
+              </S.SectionHeader>
+              <LastRead rating={lastUserRating} />
+            </>
+          )}
           <Text size="sm">Avaliações mais recentes</Text>
           <S.ScrollBox>
-            {booksReviews.map((bookReview) => (
-              <BookCard
-                key={bookReview.id}
-                user={bookReview.user}
-                book={bookReview.book}
-              />
+            {ratings.map((rating) => (
+              <BookCard key={rating.id} rating={rating} />
             ))}
           </S.ScrollBox>
         </S.BooksList>
@@ -53,19 +58,19 @@ export function HomeModule() {
           </S.SectionHeader>
 
           <S.ScrollBox>
-            {[1, 2, 3, 4, 5, 6].map((book) => (
-              <S.PopularBook key={book}>
+            {popularBooks.map((book) => (
+              <S.PopularBook key={book.id}>
                 <Image
-                  src="/images/o-hobbit.png"
+                  src={book.cover_url}
                   width={64}
                   height={94}
-                  alt=""
+                  alt={book.title}
                 />
 
                 <S.PopularBookInfo>
                   <div>
-                    <Text>A revolução dos bichos</Text>
-                    <Text as="span">George Orwell</Text>
+                    <Text>{ellipsisText(book.title, 35)}</Text>
+                    <Text as="span">{book.author}</Text>
                   </div>
                   <Rating />
                 </S.PopularBookInfo>
