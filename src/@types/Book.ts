@@ -1,6 +1,9 @@
 import { Category } from './Category'
+import { Rating } from './Rating'
 
 type BookCategory = {
+  book_id: string
+  categoryId: string
   category: Category
 }
 
@@ -12,6 +15,6 @@ export type Book = {
   cover_url: string
   total_pages: number
   categories: BookCategory[]
-  rating: number
+  ratings: Rating[]
   created_at: Date
 }
