@@ -1,12 +1,11 @@
+import Image from 'next/image'
+import { useSession } from 'next-auth/react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Binoculars, BookOpen, BookmarkSimple, Check, X } from 'phosphor-react'
 import { Text } from '@/components/Text'
 import { TextField } from '@/components/TextField'
 
-import * as S from './styles'
 import { Tag } from '@/components/Tag'
-import React, { useEffect, useRef, useState } from 'react'
-import { books } from '@/data/books'
-import Image from 'next/image'
 import { Rating } from '@/components/Rating'
 import { FlexCol } from '@/components/FlexCol'
 import { Book } from '@/@types/Book'
@@ -15,48 +14,48 @@ import { FlexRow } from '@/components/FlexRow'
 import { Button } from '@/components/Button'
 import { TextArea } from '@/components/TextArea'
 import { LoginModal } from '@/components/LoginModal'
+import { ExplorePageProps } from '@/pages/explore'
 import * as Dialog from '@radix-ui/react-dialog'
 
-const tags = [
-  {
-    id: 1,
-    title: 'Tudo',
-  },
-  {
-    id: 2,
-    title: 'Computação',
-  },
-  {
-    id: 3,
-    title: 'Educação',
-  },
-  {
-    id: 4,
-    title: 'Fantasia',
-  },
-  {
-    id: 5,
-    title: 'Ficção científica',
-  },
-  {
-    id: 6,
-    title: 'Horror',
-  },
-  {
-    id: 7,
-    title: 'HQs',
-  },
-  {
-    id: 8,
-    title: 'Suspense',
-  },
-]
+import * as S from './styles'
 
-export function ExploreModule() {
-  const [activeTag, setActiveTag] = useState(1)
+export function ExploreModule({ categories, books }: ExplorePageProps) {
+  const [search, setSearch] = useState('')
+  const [activeCategory, setActiveCategory] = useState('all')
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isReviewing, setIsReviewing] = useState(false)
   const [selectedBook, setSelectedBook] = useState<Book | null>(null)
+
+  const session = useSession()
+
+  const isAuthenticated = session.status === 'authenticated'
+
+  const formattedCategories = useMemo(() => {
+    return [
+      {
+        id: 'all',
+        name: 'Tudo',
+      },
+    ].concat(categories)
+  }, [categories])
+
+  const filteredBooks = useMemo(() => {
+    return activeCategory === 'all'
+      ? books.filter(
+          (book) =>
+            book.title.toLowerCase().includes(search.toLowerCase()) ||
+            book.author.toLowerCase().includes(search.toLowerCase()),
+        )
+      : books.filter((book) => {
+          return (
+            book.categories.some(
+              (category) => category.categoryId === activeCategory,
+            ) &&
+            (book.title.toLowerCase().includes(search.toLowerCase()) ||
+              book.author.toLowerCase().includes(search.toLowerCase()))
+          )
+        })
+  }, [activeCategory, books, search])
 
   const sidebarRef = useRef<null | HTMLElement>(null)
   const modalRef = useRef<null | HTMLDivElement>(null)
@@ -94,39 +93,47 @@ export function ExploreModule() {
             Explorar
           </Text>
         </S.Title>
-        <TextField placeholder="Buscar livro ou autor" />
+        <TextField
+          value={search}
+          onChange={({ target }) => setSearch(target.value)}
+          placeholder="Buscar livro ou autor"
+        />
       </S.Header>
 
       <S.TagsList>
-        {tags.map((tag) => (
+        {formattedCategories.map((category) => (
           <Tag
-            key={tag.id}
-            label={tag.title}
-            className={tag.id === activeTag ? 'active' : ''}
-            onClick={() => setActiveTag(tag.id)}
+            key={category.id}
+            label={category.name}
+            className={category.id === activeCategory ? 'active' : ''}
+            onClick={() => setActiveCategory(category.id)}
           />
         ))}
       </S.TagsList>
 
       <S.Books>
-        {books.map((book) => (
-          <S.Book key={book.id} onClick={() => handleSelectBook(book)}>
-            <Image
-              src={book.imageURL}
-              width={108}
-              height={152}
-              alt={book.title}
-            />
-            <S.BookDetails>
-              <FlexCol>
-                <Text>{book.title}</Text>
-                <Text as="span">{book.author}</Text>
-              </FlexCol>
+        {filteredBooks?.length ? (
+          filteredBooks.map((book) => (
+            <S.Book key={book.id} onClick={() => handleSelectBook(book)}>
+              <Image
+                src={book.cover_url}
+                width={108}
+                height={152}
+                alt={book.title}
+              />
+              <S.BookDetails>
+                <FlexCol>
+                  <Text>{book.title}</Text>
+                  <Text as="span">{book.author}</Text>
+                </FlexCol>
 
-              <Rating />
-            </S.BookDetails>
-          </S.Book>
-        ))}
+                <Rating />
+              </S.BookDetails>
+            </S.Book>
+          ))
+        ) : (
+          <p>Nenhum livro encontrado</p>
+        )}
       </S.Books>
       <S.Sidebar ref={sidebarRef} variant={isSidebarOpen ? 'open' : 'closed'}>
         <S.SidebarHeader>
@@ -139,7 +146,7 @@ export function ExploreModule() {
             <Box style={{ marginTop: '1rem' }}>
               <S.SidebarBookDetails>
                 <Image
-                  src={selectedBook?.imageURL}
+                  src={selectedBook?.cover_url}
                   width={172}
                   height={242}
                   alt={selectedBook?.title}
@@ -156,7 +163,13 @@ export function ExploreModule() {
                   </FlexCol>
                   <FlexCol>
                     <Rating />
-                    <Text as="span">3 avaliações</Text>
+                    <Text as="span">
+                      {`${selectedBook.ratings.length} ${
+                        selectedBook.ratings.length > 1
+                          ? 'avaliações'
+                          : 'avaliação'
+                      }`}
+                    </Text>
                   </FlexCol>
                 </S.SidebarBookInfo>
               </S.SidebarBookDetails>
@@ -166,7 +179,9 @@ export function ExploreModule() {
                   <FlexCol>
                     <Text size="sm">Categoria</Text>
                     <Text as="span" size="md">
-                      Computação, educação
+                      {selectedBook?.categories
+                        .map((bookCategory) => bookCategory.category.name)
+                        .join(', ')}
                     </Text>
                   </FlexCol>
                 </FlexRow>
@@ -175,7 +190,7 @@ export function ExploreModule() {
                   <FlexCol>
                     <Text size="sm">Páginas</Text>
                     <Text as="span" size="md">
-                      160
+                      {selectedBook.total_pages}
                     </Text>
                   </FlexCol>
                 </FlexRow>
@@ -183,12 +198,18 @@ export function ExploreModule() {
             </Box>
             <S.SectionHeader style={{ margin: '2.5rem 0 1rem' }}>
               <Text size="sm">Avaliações</Text>
-              <Dialog.Root>
-                <Dialog.Trigger asChild>
-                  <Button variant="text">Avaliar</Button>
-                </Dialog.Trigger>
-                <LoginModal ref={modalRef} />
-              </Dialog.Root>
+              {isAuthenticated ? (
+                <Button variant="text" onClick={() => setIsReviewing(true)}>
+                  Avaliar
+                </Button>
+              ) : (
+                <Dialog.Root>
+                  <Dialog.Trigger asChild>
+                    <Button variant="text">Avaliar</Button>
+                  </Dialog.Trigger>
+                  <LoginModal ref={modalRef} />
+                </Dialog.Root>
+              )}
             </S.SectionHeader>
 
             <S.SidebarBookReviews>
