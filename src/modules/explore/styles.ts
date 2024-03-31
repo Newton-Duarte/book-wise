@@ -75,7 +75,7 @@ export const BookDetails = styled(FlexCol, {
 
 export const Sidebar = styled('aside', {
   width: '41.25rem',
-  height: '100dvh',
+  minHeight: '100dvh',
   position: 'absolute',
   top: 0,
   right: 0,
