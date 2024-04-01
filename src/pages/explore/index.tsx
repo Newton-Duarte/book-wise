@@ -40,7 +40,16 @@ export const getServerSideProps: GetServerSideProps = async () => {
       ratings: {
         select: {
           id: true,
+          description: true,
           rate: true,
+          created_at: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+            },
+          },
         },
       },
       categories: {
@@ -67,7 +76,13 @@ export const getServerSideProps: GetServerSideProps = async () => {
   return {
     props: {
       categories: filteredCategories,
-      books,
+      books: books.map((book) => ({
+        ...book,
+        ratings: book.ratings.map((rating) => ({
+          ...rating,
+          created_at: rating.created_at.toISOString(),
+        })),
+      })),
     },
   }
 }
