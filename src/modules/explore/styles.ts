@@ -1,6 +1,7 @@
 import { Box } from '@/components/Box'
 import { FlexCol } from '@/components/FlexCol'
 import { FlexRow } from '@/components/FlexRow'
+import { Text } from '@/components/Text'
 import { TextArea } from '@/components/TextArea'
 import { styled } from '@/styles'
 
@@ -230,7 +231,13 @@ export const SidebarBookReviewFormActions = styled(FlexRow, {
     alignItems: 'center',
     justifyContent: 'center',
 
-    '&:hover': {
+    '&:disabled': {
+      filter: 'brightness(0.7)',
+      transition: 'filter 0.2s',
+      cursor: 'not-allowed',
+    },
+
+    '&:not(:disabled):hover': {
       filter: 'brightness(0.8)',
       transition: 'filter 0.2s',
     },
@@ -255,8 +262,17 @@ export const SectionHeader = styled('div', {
   justifyContent: 'space-between',
 })
 
+export const RatingField = styled(FlexCol, {
+  gap: '$1',
+})
+
 export const EmptyData = styled('div', {
   p: {
     color: '$gray400',
   },
+})
+
+export const ErrorText = styled(Text, {
+  color: '$danger',
+  filter: 'brightness(0.9)',
 })

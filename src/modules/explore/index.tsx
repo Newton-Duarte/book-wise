@@ -2,6 +2,9 @@ import Image from 'next/image'
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Binoculars, BookOpen, BookmarkSimple, Check, X } from 'phosphor-react'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Text } from '@/components/Text'
 import { TextField } from '@/components/TextField'
 
@@ -21,6 +24,13 @@ import * as Dialog from '@radix-ui/react-dialog'
 
 import * as S from './styles'
 
+const userReviewFormSchema = z.object({
+  rate: z.coerce.number().min(1, 'Campo obrigatório'),
+  review: z.string().min(1, 'Campo obrigatório'),
+})
+
+type UserReviewFormData = z.infer<typeof userReviewFormSchema>
+
 export function ExploreModule({ categories, books }: ExplorePageProps) {
   const [search, setSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState('all')
@@ -28,10 +38,25 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
   const [isReviewing, setIsReviewing] = useState(false)
   const [selectedBook, setSelectedBook] = useState<Book | null>(null)
 
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting, errors },
+  } = useForm<UserReviewFormData>({
+    resolver: zodResolver(userReviewFormSchema),
+    defaultValues: {
+      rate: 1,
+      review: '',
+    },
+  })
+
   const session = useSession()
 
-  const currentUserId = session?.data?.user?.id
+  const currentUser = session?.data?.user
   const isAuthenticated = session.status === 'authenticated'
+  const currentUserHasReviewedSelectedBook = selectedBook?.ratings?.some(
+    (rating) => rating.user.id === currentUser?.id,
+  )
 
   const formattedCategories = useMemo(() => {
     return [
@@ -85,6 +110,11 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
   const handleSelectBook = (book: Book) => {
     setSelectedBook(book)
     setIsSidebarOpen(true)
+  }
+
+  const handleSubmitReview = async (data: UserReviewFormData) => {
+    console.log(data)
+    await new Promise((resolve) => setTimeout(resolve, 2000))
   }
 
   return (
@@ -204,7 +234,7 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
             </Box>
             <S.SectionHeader style={{ margin: '2.5rem 0 1rem' }}>
               <Text size="sm">Avaliações</Text>
-              {isAuthenticated ? (
+              {currentUserHasReviewedSelectedBook ? null : isAuthenticated ? (
                 <Button variant="text" onClick={() => setIsReviewing(true)}>
                   Avaliar
                 </Button>
@@ -220,27 +250,47 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
 
             <S.SidebarBookReviews>
               {isReviewing && (
-                <S.SidebarBookReviewForm as="form">
+                <S.SidebarBookReviewForm
+                  as="form"
+                  onSubmit={handleSubmit(handleSubmitReview)}
+                >
                   <FlexRow>
                     <FlexRow>
                       <Image
-                        src="https://github.com/newton-duarte.png"
+                        src={currentUser?.image as string}
                         width={40}
                         height={40}
                         alt=""
                       />
                       <Text size="md" as="h6">
-                        Newton Duarte
+                        {currentUser?.name}
                       </Text>
                     </FlexRow>
-                    <Rating />
+                    <S.RatingField>
+                      <Rating />
+                      {!!errors?.rate && (
+                        <S.ErrorText size="xs">
+                          {errors.rate.message}
+                        </S.ErrorText>
+                      )}
+                    </S.RatingField>
                   </FlexRow>
-                  <TextArea placeholder="Escreva sua avaliação" />
+                  <TextArea
+                    placeholder="Escreva sua avaliação"
+                    {...register('review')}
+                  />
+                  {!!errors?.review && (
+                    <S.ErrorText size="xs">{errors.review.message}</S.ErrorText>
+                  )}
                   <S.SidebarBookReviewFormActions>
-                    <button type="button" onClick={() => setIsReviewing(false)}>
+                    <button
+                      type="button"
+                      disabled={isSubmitting}
+                      onClick={() => setIsReviewing(false)}
+                    >
                       <X size={24} />
                     </button>
-                    <button type="submit">
+                    <button type="submit" disabled={isSubmitting}>
                       <Check size={24} />
                     </button>
                   </S.SidebarBookReviewFormActions>
@@ -251,7 +301,7 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
                   <S.SidebarBookReview
                     key={review.id}
                     className={
-                      review.user.id === currentUserId
+                      review.user.id === currentUser?.id
                         ? 'current-user-review'
                         : ''
                     }
