@@ -34,7 +34,9 @@ export function BookCard({ rating }: BookCardProps) {
             <Avatar src={rating.user.image} size="lg" name={rating.user.name} />
           </Link>
           <FlexCol>
-            <Text>{rating.user.name}</Text>
+            <Link href={`/profile/${rating.user.id}`}>
+              <Text>{rating.user.name}</Text>
+            </Link>
             <Text as="span">{dayjs(rating.created_at).fromNow()}</Text>
           </FlexCol>
           <Rating />

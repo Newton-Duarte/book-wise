@@ -11,6 +11,10 @@ export const Header = styled('div', {
   gap: '1rem',
 
   a: {
+    textDecoration: 'none',
+  },
+
+  'a:has(img)': {
     width: '2.5rem',
     height: '2.5rem',
     alignSelf: 'center',
