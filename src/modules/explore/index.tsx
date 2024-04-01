@@ -15,6 +15,8 @@ import { Button } from '@/components/Button'
 import { TextArea } from '@/components/TextArea'
 import { LoginModal } from '@/components/LoginModal'
 import { ExplorePageProps } from '@/pages/explore'
+import { Avatar } from '@/components/Avatar'
+import { dayjs } from '@/lib/dayjs'
 import * as Dialog from '@radix-ui/react-dialog'
 
 import * as S from './styles'
@@ -28,6 +30,7 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
 
   const session = useSession()
 
+  const currentUserId = session?.data?.user?.id
   const isAuthenticated = session.status === 'authenticated'
 
   const formattedCategories = useMemo(() => {
@@ -94,6 +97,7 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
           </Text>
         </S.Title>
         <TextField
+          type="search"
           value={search}
           onChange={({ target }) => setSearch(target.value)}
           placeholder="Buscar livro ou autor"
@@ -132,7 +136,9 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
             </S.Book>
           ))
         ) : (
-          <p>Nenhum livro encontrado</p>
+          <S.EmptyData>
+            <Text size="sm">Nenhum livro encontrado</Text>
+          </S.EmptyData>
         )}
       </S.Books>
       <S.Sidebar ref={sidebarRef} variant={isSidebarOpen ? 'open' : 'closed'}>
@@ -240,41 +246,48 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
                   </S.SidebarBookReviewFormActions>
                 </S.SidebarBookReviewForm>
               )}
-              {[1, 2, 3].map((review) => (
-                <S.SidebarBookReview
-                  key={review}
-                  className={review === 1 ? 'current-user-review' : ''}
-                >
-                  <FlexRow>
+              {selectedBook.ratings.length ? (
+                selectedBook.ratings.map((review) => (
+                  <S.SidebarBookReview
+                    key={review.id}
+                    className={
+                      review.user.id === currentUserId
+                        ? 'current-user-review'
+                        : ''
+                    }
+                  >
                     <FlexRow>
-                      <Image
-                        src="https://github.com/newton-duarte.png"
-                        width={40}
-                        height={40}
-                        alt=""
-                      />
-                      <FlexCol>
-                        <Text size="md" as="h6">
-                          Newton Duarte
-                        </Text>
-                        <Text as="span" size="sm">
-                          Há 2 dias
-                        </Text>
-                      </FlexCol>
+                      <FlexRow>
+                        <Avatar
+                          src={review.user.image}
+                          name={review.user.name}
+                          size="lg"
+                        />
+                        <FlexCol>
+                          <Text size="md" as="h6">
+                            {review.user.name}
+                          </Text>
+                          <Text as="span" size="sm">
+                            {dayjs(review.created_at).fromNow()}
+                          </Text>
+                        </FlexCol>
+                      </FlexRow>
+                      <Rating />
                     </FlexRow>
-                    <Rating />
-                  </FlexRow>
-                  <Text size="sm">
-                    Nec tempor nunc in egestas. Euismod nisi eleifend at et in
-                    sagittis. Penatibus id vestibulum imperdiet a at imperdiet
-                    lectus leo. Sit porta eget nec vitae sit vulputate eget
-                  </Text>
-                </S.SidebarBookReview>
-              ))}
+                    <Text size="sm">{review.description}</Text>
+                  </S.SidebarBookReview>
+                ))
+              ) : (
+                <S.EmptyData>
+                  <Text size="sm">Nenhuma avaliação encontrada</Text>
+                </S.EmptyData>
+              )}
             </S.SidebarBookReviews>
           </>
         ) : (
-          <p>Nenhum livro encontrado</p>
+          <S.EmptyData>
+            <Text size="sm">Nenhum livro encontrado</Text>
+          </S.EmptyData>
         )}
       </S.Sidebar>
     </S.Container>

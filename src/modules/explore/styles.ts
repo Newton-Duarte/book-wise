@@ -254,3 +254,9 @@ export const SectionHeader = styled('div', {
   alignItems: 'center',
   justifyContent: 'space-between',
 })
+
+export const EmptyData = styled('div', {
+  p: {
+    color: '$gray400',
+  },
+})
