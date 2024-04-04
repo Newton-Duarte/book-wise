@@ -20,6 +20,8 @@ import { LoginModal } from '@/components/LoginModal'
 import { ExplorePageProps } from '@/pages/explore'
 import { Avatar } from '@/components/Avatar'
 import { dayjs } from '@/lib/dayjs'
+import { api } from '@/lib/axios'
+import { Rating as RatingType } from '@/@types/Rating'
 import * as Dialog from '@radix-ui/react-dialog'
 
 import * as S from './styles'
@@ -37,6 +39,7 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isReviewing, setIsReviewing] = useState(false)
   const [selectedBook, setSelectedBook] = useState<Book | null>(null)
+  const [userReview, setUserReview] = useState<RatingType | null>(null)
 
   const {
     register,
@@ -96,6 +99,7 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
     ) {
       setIsSidebarOpen(false)
       setSelectedBook(null)
+      setUserReview(null)
     }
   }
 
@@ -113,8 +117,17 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
   }
 
   const handleSubmitReview = async (data: UserReviewFormData) => {
-    console.log(data)
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    try {
+      const response = await api.post(`books/${selectedBook?.id}/ratings`, {
+        rate: data.rate,
+        description: data.review,
+      })
+
+      setIsReviewing(false)
+      setUserReview(response.data.rating)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -234,7 +247,8 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
             </Box>
             <S.SectionHeader style={{ margin: '2.5rem 0 1rem' }}>
               <Text size="sm">Avaliações</Text>
-              {currentUserHasReviewedSelectedBook ? null : isAuthenticated ? (
+              {currentUserHasReviewedSelectedBook ||
+              userReview ? null : isAuthenticated ? (
                 <Button variant="text" onClick={() => setIsReviewing(true)}>
                   Avaliar
                 </Button>
@@ -295,6 +309,35 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
                     </button>
                   </S.SidebarBookReviewFormActions>
                 </S.SidebarBookReviewForm>
+              )}
+              {!!userReview && (
+                <S.SidebarBookReview
+                  className={
+                    userReview.user.id === currentUser?.id
+                      ? 'current-user-review'
+                      : ''
+                  }
+                >
+                  <FlexRow>
+                    <FlexRow>
+                      <Avatar
+                        src={userReview.user.image}
+                        name={userReview.user.name}
+                        size="lg"
+                      />
+                      <FlexCol>
+                        <Text size="md" as="h6">
+                          {userReview.user.name}
+                        </Text>
+                        <Text as="span" size="sm">
+                          {dayjs(userReview.created_at).fromNow()}
+                        </Text>
+                      </FlexCol>
+                    </FlexRow>
+                    <Rating />
+                  </FlexRow>
+                  <Text size="sm">{userReview.description}</Text>
+                </S.SidebarBookReview>
               )}
               {selectedBook.ratings.length ? (
                 selectedBook.ratings.map((review) => (
