@@ -8,5 +8,6 @@ export const Container = styled('div', {
 
   svg: {
     color: '$purple100',
+    cursor: 'pointer',
   },
 })

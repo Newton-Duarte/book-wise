@@ -22,6 +22,7 @@ import { Avatar } from '@/components/Avatar'
 import { dayjs } from '@/lib/dayjs'
 import { api } from '@/lib/axios'
 import { Rating as RatingType } from '@/@types/Rating'
+import { RatingFormField } from '@/components/RatingFormField'
 import { getBookRating } from './utils'
 import * as Dialog from '@radix-ui/react-dialog'
 
@@ -45,11 +46,13 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
   const {
     register,
     handleSubmit,
+    setValue,
+    reset,
     formState: { isSubmitting, errors },
   } = useForm<UserReviewFormData>({
     resolver: zodResolver(userReviewFormSchema),
     defaultValues: {
-      rate: 1,
+      rate: 0,
       review: '',
     },
   })
@@ -101,6 +104,7 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
       setIsSidebarOpen(false)
       setSelectedBook(null)
       setUserReview(null)
+      reset()
     }
   }
 
@@ -125,7 +129,11 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
       })
 
       setIsReviewing(false)
-      setUserReview(response.data.rating)
+      setUserReview({
+        ...response.data.rating,
+        rate: data.rate,
+      })
+      reset()
     } catch (error) {
       console.log(error)
     }
@@ -282,7 +290,9 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
                       </Text>
                     </FlexRow>
                     <S.RatingField>
-                      <Rating rate={0} />
+                      <RatingFormField
+                        onChange={(value) => setValue('rate', value)}
+                      />
                       {!!errors?.rate && (
                         <S.ErrorText size="xs">
                           {errors.rate.message}
@@ -335,7 +345,7 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
                         </Text>
                       </FlexCol>
                     </FlexRow>
-                    <Rating rate={getBookRating(userReview.book)} />
+                    <Rating rate={userReview.rate} />
                   </FlexRow>
                   <Text size="sm">{userReview.description}</Text>
                 </S.SidebarBookReview>
@@ -366,7 +376,7 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
                           </Text>
                         </FlexCol>
                       </FlexRow>
-                      <Rating rate={getBookRating(review.book)} />
+                      <Rating rate={review.rate} />
                     </FlexRow>
                     <Text size="sm">{review.description}</Text>
                   </S.SidebarBookReview>
