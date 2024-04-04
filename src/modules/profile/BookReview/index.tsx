@@ -4,6 +4,7 @@ import { Rating } from '@/components/Rating'
 import { FlexCol } from '@/components/FlexCol'
 import { dayjs } from '@/lib/dayjs'
 import { Rating as UserRating } from '@/@types/Rating'
+import { getBookRating } from '@/modules/explore/utils'
 
 import * as S from './styles'
 
@@ -29,7 +30,7 @@ export function BookReview({ rating }: BookReviewProps) {
             </Text>
           </FlexCol>
 
-          <Rating />
+          <Rating rate={getBookRating(rating.book)} />
         </S.Header>
         <S.Details>
           <Text size="sm">{rating.description}</Text>
