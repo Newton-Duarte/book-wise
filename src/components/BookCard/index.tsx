@@ -10,6 +10,7 @@ import { Button } from '../Button'
 import { Rating as RatingType } from '@/@types/Rating'
 import { dayjs } from '@/lib/dayjs'
 import { Avatar } from '../Avatar'
+import { getBookRating } from '@/modules/explore/utils'
 
 import * as S from './styles'
 
@@ -39,7 +40,7 @@ export function BookCard({ rating }: BookCardProps) {
             </Link>
             <Text as="span">{dayjs(rating.created_at).fromNow()}</Text>
           </FlexCol>
-          <Rating />
+          <Rating rate={getBookRating(rating.book)} />
         </S.Header>
 
         <S.Content>
