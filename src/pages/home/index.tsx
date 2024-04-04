@@ -55,7 +55,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
         created_at: 'desc',
       },
       include: {
-        book: true,
+        book: {
+          include: {
+            ratings: true,
+          },
+        },
       },
     })
   }
@@ -65,6 +69,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
         ...lastUserRating,
         book: {
           ...lastUserRating.book,
+          ratings: lastUserRating.book.ratings.map((rating) => ({
+            ...rating,
+            created_at: rating.created_at.toISOString(),
+          })),
           created_at: lastUserRating.book.created_at.toISOString(),
         },
         created_at: lastUserRating.created_at.toISOString(),
