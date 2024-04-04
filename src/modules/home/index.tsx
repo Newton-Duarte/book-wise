@@ -72,7 +72,7 @@ export function HomeModule({
                     <Text>{ellipsisText(book.title, 35)}</Text>
                     <Text as="span">{book.author}</Text>
                   </div>
-                  <Rating />
+                  <Rating rate={book.rating} />
                 </S.PopularBookInfo>
               </S.PopularBook>
             ))}

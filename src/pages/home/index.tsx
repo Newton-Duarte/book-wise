@@ -28,13 +28,20 @@ export default HomePage
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const ratings = await prisma.rating.findMany({
     include: {
-      book: true,
+      book: {
+        include: {
+          ratings: true,
+        },
+      },
       user: true,
+    },
+    orderBy: {
+      created_at: 'desc',
     },
   })
 
   const popularBooks: Book[] = await prisma.$queryRaw`
-    SELECT b.id, b.title, b.author, b.cover_url
+    SELECT b.id, b.title, b.author, b.cover_url, CAST(AVG(r.rate) as integer) as rating
     FROM books b
     INNER JOIN ratings r on r.book_id = b.id
     GROUP BY b.id
@@ -87,6 +94,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
         ...rating,
         book: {
           ...rating.book,
+          ratings: rating.book.ratings.map((rating) => ({
+            ...rating,
+            created_at: rating.created_at.toISOString(),
+          })),
           created_at: rating.book.created_at.toISOString(),
         },
         user: {
