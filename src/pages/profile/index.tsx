@@ -45,6 +45,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     include: {
       book: {
         include: {
+          ratings: true,
           categories: {
             include: {
               category: {
@@ -58,6 +59,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
         },
       },
     },
+    orderBy: {
+      created_at: 'desc',
+    },
   })
 
   return {
@@ -67,6 +71,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
         ...rating,
         book: {
           ...rating.book,
+          ratings: rating.book.ratings.map((rating) => ({
+            ...rating,
+            created_at: rating.created_at.toISOString(),
+          })),
           created_at: rating.book.created_at.toISOString(),
         },
         created_at: rating.created_at.toISOString(),

@@ -55,6 +55,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     include: {
       book: {
         include: {
+          ratings: true,
           categories: {
             include: {
               category: {
@@ -67,6 +68,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           },
         },
       },
+    },
+    orderBy: {
+      created_at: 'desc',
     },
   })
 
@@ -81,6 +85,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         ...rating,
         book: {
           ...rating.book,
+          ratings: rating.book.ratings.map((rating) => ({
+            ...rating,
+            created_at: rating.created_at.toISOString(),
+          })),
           created_at: rating.book.created_at.toISOString(),
         },
         created_at: rating.created_at.toISOString(),
