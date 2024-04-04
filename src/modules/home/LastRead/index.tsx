@@ -7,6 +7,7 @@ import { dayjs } from '@/lib/dayjs'
 import { ellipsisText } from '@/utils/ellipsisText'
 
 import * as S from './styles'
+import { getBookRating } from '@/modules/explore/utils'
 
 export type LastReadProps = {
   rating: RatingType
@@ -22,7 +23,7 @@ export function LastRead({ rating }: LastReadProps) {
           <Text as="span" size="sm">
             {dayjs(rating.created_at).fromNow()}
           </Text>
-          <Rating />
+          <Rating rate={getBookRating(rating.book)} />
         </S.Header>
         <S.Details>
           <FlexCol>
