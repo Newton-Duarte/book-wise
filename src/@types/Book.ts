@@ -16,5 +16,6 @@ export type Book = {
   total_pages: number
   categories: BookCategory[]
   ratings: Rating[]
+  rating: number
   created_at: Date
 }
