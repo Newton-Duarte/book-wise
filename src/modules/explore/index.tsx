@@ -22,6 +22,7 @@ import { Avatar } from '@/components/Avatar'
 import { dayjs } from '@/lib/dayjs'
 import { api } from '@/lib/axios'
 import { Rating as RatingType } from '@/@types/Rating'
+import { getBookRating } from './utils'
 import * as Dialog from '@radix-ui/react-dialog'
 
 import * as S from './styles'
@@ -174,7 +175,7 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
                   <Text as="span">{book.author}</Text>
                 </FlexCol>
 
-                <Rating />
+                <Rating rate={getBookRating(book)} />
               </S.BookDetails>
             </S.Book>
           ))
@@ -211,7 +212,7 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
                     </Text>
                   </FlexCol>
                   <FlexCol>
-                    <Rating />
+                    <Rating rate={getBookRating(selectedBook)} />
                     <Text as="span">
                       {`${selectedBook.ratings.length} ${
                         selectedBook.ratings.length > 1
@@ -281,7 +282,7 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
                       </Text>
                     </FlexRow>
                     <S.RatingField>
-                      <Rating />
+                      <Rating rate={0} />
                       {!!errors?.rate && (
                         <S.ErrorText size="xs">
                           {errors.rate.message}
@@ -334,7 +335,7 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
                         </Text>
                       </FlexCol>
                     </FlexRow>
-                    <Rating />
+                    <Rating rate={getBookRating(userReview.book)} />
                   </FlexRow>
                   <Text size="sm">{userReview.description}</Text>
                 </S.SidebarBookReview>
@@ -365,7 +366,7 @@ export function ExploreModule({ categories, books }: ExplorePageProps) {
                           </Text>
                         </FlexCol>
                       </FlexRow>
-                      <Rating />
+                      <Rating rate={getBookRating(review.book)} />
                     </FlexRow>
                     <Text size="sm">{review.description}</Text>
                   </S.SidebarBookReview>
