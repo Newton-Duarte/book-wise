@@ -19,6 +19,10 @@ export function LoginModule() {
     await signIn('google')
   }
 
+  const handleGithubSignIn = async () => {
+    await signIn('github')
+  }
+
   return (
     <S.Container>
       <S.ImageContainer>
@@ -38,7 +42,7 @@ export function LoginModule() {
             </Button>
           </li>
           <li>
-            <Button>
+            <Button onClick={handleGithubSignIn}>
               <Image src={githubLogoImg} width={32} height={32} alt="" />
               Entrar com GitHub
             </Button>

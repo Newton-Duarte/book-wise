@@ -15,6 +15,10 @@ export const LoginModal = forwardRef<HTMLDivElement>((props, ref) => {
     await signIn('google')
   }
 
+  const handleGithubSignIn = async () => {
+    await signIn('github')
+  }
+
   return (
     <Dialog.Portal>
       <S.Overlay />
@@ -30,7 +34,7 @@ export const LoginModal = forwardRef<HTMLDivElement>((props, ref) => {
             <Image src={googleLogoImg} width={32} height={32} alt="" />
             Entrar com Google
           </S.LoginButton>
-          <S.LoginButton>
+          <S.LoginButton onClick={handleGithubSignIn}>
             <Image src={githubLogoImg} width={32} height={32} alt="" />
             Entrar com GitHub
           </S.LoginButton>
